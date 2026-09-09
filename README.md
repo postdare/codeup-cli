@@ -1,13 +1,13 @@
 # codeup-cli
 
-阿里云云效（Codeup）命令行工具，使用 Go 开发。当前版本支持**创建合并请求**。
+阿里云云效（Codeup）命令行工具，使用 Go 开发。当前版本支持**创建合并请求**、**手动运行流水线任务并持续查看任务日志**。
 
 ## 安装
 
 ### Homebrew（macOS，推荐）
 
 ```bash
-brew tap foundralab/tap
+brew tap postdare/tap
 brew install --cask codeup
 ```
 
@@ -16,7 +16,7 @@ brew install --cask codeup
 ### go install（需 Go 1.24+）
 
 ```bash
-go install github.com/foundralab/codeup-cli/cmd/codeup@latest
+go install github.com/postdare/codeup-cli/cmd/codeup@latest
 ```
 
 安装后命令名为 `codeup`（确保 `$GOPATH/bin` 在 PATH 中）。
@@ -105,6 +105,26 @@ codeup mr create --repo 2813489 -s feat/login --target master -t "支持登录" 
   链接:   https://example.com/example/demo/change/1
 ```
 
+## 流水线任务
+
+```bash
+# 手动运行流水线中的某个任务（如人工确认的部署节点）
+codeup pipeline job start --pipeline 123 --run 1 --job 21212
+
+# 持续输出任务日志，直到任务结束（默认行为）
+codeup pipeline job log --pipeline 123 --run 1 --job 21212
+
+# 调整轮询间隔 / 只取一次当前日志
+codeup pipeline job log --pipeline 123 --run 1 --job 21212 --interval 5s
+codeup pipeline job log --pipeline 123 --run 1 --job 21212 --follow=false
+```
+
+说明：
+
+- `--run`（流水线运行实例 ID）与 `--job`（任务 ID）可分别在流水线运行记录页 URL 或 `GetPipelineRun` 接口返回中查到。
+- 持续获取日志时，日志写 stdout、进度与最终状态写 stderr，可直接管道处理日志。
+- 任务最终状态不是 `SUCCESS` 时命令以非零码退出，便于在脚本/CI 中判断发布成败。
+
 ## 项目结构
 
 ```
@@ -113,10 +133,12 @@ internal/cli/              命令定义（cobra）
   root.go                  根命令、全局参数、版本号、配置装配
   config.go                codeup config set/get
   mr.go                    codeup mr create
+  pipeline.go              codeup pipeline job start/log
 internal/config/           配置文件 + 环境变量加载
 internal/api/              云效 OpenAPI 客户端
   client.go                HTTP 封装、中心版/Region 版路径、错误处理
   mr.go                    创建合并请求接口与数据模型
+  flow.go                  流水线任务启动 / 日志查询 / 运行实例查询接口
 ```
 
 ## 开发

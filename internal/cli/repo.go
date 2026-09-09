@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/foundralab/codeup-cli/internal/api"
+	"github.com/postdare/codeup-cli/internal/api"
 )
 
 var repoCmd = &cobra.Command{

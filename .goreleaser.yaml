@@ -20,7 +20,7 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -s -w -X github.com/foundralab/codeup-cli/internal/cli.version={{ .Version }}
+      - -s -w -X github.com/postdare/codeup-cli/internal/cli.version={{ .Version }}
 
 archives:
   - formats: [tar.gz]
@@ -43,20 +43,20 @@ changelog:
       - "^test:"
       - "^chore:"
 
-# 自动更新 foundralab/homebrew-tap 的 cask（分发预编译二进制，安装无需 Go）。
+# 自动更新 postdare/homebrew-tap 的 cask（分发预编译二进制，安装无需 Go）。
 # 需要在 codeup-cli 仓库配置 HOMEBREW_TAP_TOKEN secret（对 homebrew-tap 有写权限的 PAT）。
 homebrew_casks:
   - name: codeup
     repository:
-      owner: foundralab
+      owner: postdare
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     directory: Casks
-    homepage: https://github.com/foundralab/codeup-cli
+    homepage: https://github.com/postdare/codeup-cli
     description: "CLI for Aliyun Yunxiao Codeup (create merge requests, etc.)"
     commit_author:
       name: goreleaser-bot
-      email: foundralab@users.noreply.github.com
+      email: postdare@users.noreply.github.com
     commit_msg_template: "chore: 更新 {{ .ProjectName }} cask 至 {{ .Tag }}"
     # 二进制未做 Apple 签名/公证，安装后移除隔离属性，避免 Gatekeeper 拦截。
     hooks:

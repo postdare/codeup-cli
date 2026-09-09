@@ -1,4 +1,4 @@
-module github.com/foundralab/codeup-cli
+module github.com/postdare/codeup-cli
 
 go 1.24.2
 

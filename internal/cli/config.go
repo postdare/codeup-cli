@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/foundralab/codeup-cli/internal/config"
+	"github.com/postdare/codeup-cli/internal/config"
 )
 
 var configCmd = &cobra.Command{

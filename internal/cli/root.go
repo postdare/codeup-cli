@@ -7,11 +7,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/foundralab/codeup-cli/internal/api"
-	"github.com/foundralab/codeup-cli/internal/config"
+	"github.com/postdare/codeup-cli/internal/api"
+	"github.com/postdare/codeup-cli/internal/config"
 )
 
-// version 由构建时 ldflags 注入：-X github.com/foundralab/codeup-cli/internal/cli.version=x.y.z
+// version 由构建时 ldflags 注入：-X github.com/postdare/codeup-cli/internal/cli.version=x.y.z
 var version = "dev"
 
 // 全局参数，可覆盖配置文件与环境变量。

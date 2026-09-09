@@ -1,7 +1,7 @@
 VERSION ?= 0.1.0
 DIST    := dist
 MAIN    := ./cmd/codeup
-LDFLAGS := -s -w -X github.com/foundralab/codeup-cli/internal/cli.version=$(VERSION)
+LDFLAGS := -s -w -X github.com/postdare/codeup-cli/internal/cli.version=$(VERSION)
 
 # 平台列表：mac（Intel/Apple Silicon）、Windows、Linux
 PLATFORMS := darwin/arm64 darwin/amd64 windows/amd64 windows/arm64 linux/amd64

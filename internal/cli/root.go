@@ -24,15 +24,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "codeup",
 	Short: "阿里云云效 Codeup 命令行工具",
-	Long: `codeup 是阿里云云效（Codeup）的命令行工具。
-
-配置优先级：命令行参数 > 环境变量 (CODEUP_TOKEN / CODEUP_DOMAIN / CODEUP_ORG_ID) > 配置文件 (~/.config/codeup/config.json)。
-
-快速开始:
-  codeup config set domain openapi-rdc.aliyuncs.com
-  codeup config set token pt-xxxx
-  codeup config set org-id 60d54f3daccf2bbd6659f3ad   # 仅中心版需要
-  codeup mr create --repo 2813489 --source feat/demo --target master --title "my mr"`,
+	// Long 在 init 中根据当前配置状态动态生成。
 	Version:       version,
 	SilenceUsage:  true,
 	SilenceErrors: true,
@@ -50,6 +42,32 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&flagDomain, "domain", "", "云效服务接入点（如 openapi-rdc.aliyuncs.com）")
 	rootCmd.PersistentFlags().StringVar(&flagToken, "token", "", "个人访问令牌")
 	rootCmd.PersistentFlags().StringVar(&flagOrgID, "org-id", "", "组织 ID（仅中心版需要，Region 版留空）")
+
+	rootCmd.Long = buildLong()
+}
+
+// buildLong 生成根命令的帮助文本。已完成基础配置（domain + token）时，
+// 不再展示初始化引导，只保留使用示例。
+func buildLong() string {
+	header := `codeup 是阿里云云效（Codeup）的命令行工具。
+
+配置优先级：命令行参数 > 环境变量 (CODEUP_TOKEN / CODEUP_DOMAIN / CODEUP_ORG_ID) > 配置文件 (~/.config/codeup/config.json)。`
+
+	example := `
+
+示例:
+  codeup mr create --repo 2813489 --source feat/demo --target master --title "my mr"`
+
+	if cfg, err := config.Load(); err == nil && cfg.Domain != "" && cfg.Token != "" {
+		return header + example
+	}
+
+	return header + `
+
+快速开始:
+  codeup config set domain openapi-rdc.aliyuncs.com
+  codeup config set token pt-xxxx
+  codeup config set org-id 60d54f3daccf2bbd6659f3ad   # 仅中心版需要` + example
 }
 
 // Execute 是 CLI 入口。
